@@ -1,0 +1,46 @@
+cabal-version: 3.0
+name:          reviews
+version:       0.1.0.0
+synopsis:      Check open PRs requiring review for your team
+description:   CLI tool that queries GitHub's GraphQL API to show open pull
+               requests awaiting review from your team, grouped by author
+               with colored terminal output.
+author:        Kyriakos Papachrysanthou
+license:       BSD-3-Clause
+
+library
+  exposed-modules:
+    Reviews.Config
+    Reviews.Display
+    Reviews.GitHub
+
+  hs-source-dirs:   src
+  build-depends:
+    aeson,
+    base                        >=4.14 && <5,
+    bytestring,
+    neat-interpolation,
+    optparse-applicative,
+    prettyprinter,
+    prettyprinter-ansi-terminal,
+    process,
+    text,
+    time,
+    yaml,
+
+  default-extensions:
+    OverloadedStrings
+    RecordWildCards
+
+  default-language: GHC2021
+  ghc-options:      -Wall
+
+executable reviews
+  main-is:          Main.hs
+  hs-source-dirs:   app
+  build-depends:
+    base     >=4.14 && <5,
+    reviews,
+
+  default-language: GHC2021
+  ghc-options:      -Wall

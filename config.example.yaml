@@ -1,0 +1,5 @@
+org: my-org
+members:
+  - alice
+  - bob
+  - charlie
