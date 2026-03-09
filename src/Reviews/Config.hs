@@ -9,6 +9,7 @@ import Data.Text (Text)
 import Data.Yaml (FromJSON, decodeFileThrow)
 import GHC.Generics
 import Options.Applicative
+import System.Directory (getXdgDirectory, XdgDirectory(..))
 
 data Config = Config
   { org :: Text
@@ -19,7 +20,7 @@ data Config = Config
 instance FromJSON Config
 
 newtype Opts = Opts
-  { configPath :: FilePath
+  { configPath :: Maybe FilePath
   }
 
 parseOpts :: IO Opts
@@ -32,17 +33,20 @@ parseOpts =
           <> header "reviews - team PR review checker"
       )
 
-loadConfig :: FilePath -> IO Config
-loadConfig = decodeFileThrow
+loadConfig :: Maybe FilePath -> IO Config
+loadConfig (Just p) = decodeFileThrow p
+loadConfig Nothing = do
+  p <- getXdgDirectory XdgConfig "reviews/config.yaml"
+  decodeFileThrow p
 
 optionsParser :: Parser Opts
 optionsParser =
   Opts
-    <$> strOption
-      ( long "config"
-          <> short 'c'
-          <> metavar "FILE"
-          <> value "config.yaml"
-          <> showDefault
-          <> help "Path to the configuration file"
+    <$> optional
+      ( strOption
+          ( long "config"
+              <> short 'c'
+              <> metavar "FILE"
+              <> help "Path to the configuration file (default: ~/.config/reviews/config.yaml)"
+          )
       )

@@ -4,9 +4,15 @@ A simple vibe-coded CLI tool that shows open pull requests awaiting review from 
 
 Requires the [GitHub CLI](https://cli.github.com/) (`gh`) to be installed and authenticated.
 
+## Install
+
+```
+cabal install exe:reviews
+```
+
 ## Setup
 
-Create a `config.yaml` (see `config.example.yaml`):
+Create `~/.config/reviews/config.yaml`:
 
 ```yaml
 org: my-org
@@ -19,17 +25,16 @@ members:
 - `org` — the GitHub organization to search
 - `members` — GitHub usernames whose open PRs to show
 
-Build and run:
+Then just run:
 
 ```
-cabal build
-cabal run reviews
+reviews
 ```
 
-Use `--config` / `-c` to point to a different config file:
+Use `-c` to point to a different config file:
 
 ```
-cabal run reviews -- -c team.yaml
+reviews -c /path/to/team.yaml
 ```
 
 ## Example output
