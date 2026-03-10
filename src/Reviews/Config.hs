@@ -28,6 +28,7 @@ instance FromJSON Config where
 data Opts = Opts
   { configPath :: Maybe FilePath
   , optsReviewRequired :: Bool
+  , optsUser :: Maybe Text
   }
 
 version :: String
@@ -68,4 +69,12 @@ optionsParser =
       ( long "required"
           <> short 'r'
           <> help "Only show PRs that still need a review"
+      )
+    <*> optional
+      ( strOption
+          ( long "user"
+              <> short 'u'
+              <> metavar "USER"
+              <> help "Filter PRs by author (case-insensitive substring match)"
+          )
       )

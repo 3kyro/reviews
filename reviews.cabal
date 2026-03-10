@@ -42,6 +42,7 @@ executable reviews
   build-depends:
     base     >=4.14 && <5,
     reviews,
+    text,
 
   default-language: GHC2021
   ghc-options:      -Wall
