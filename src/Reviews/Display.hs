@@ -51,6 +51,7 @@ renderPR now PR{..} =
           , whenMaybe (not (null approvals)) (annotate (color Green) ("Approved by:" <+> commas approvals))
           , whenMaybe (not (null changesReq)) (annotate (color Red) ("Changes requested by:" <+> commas changesReq))
           ]
+      branchDoc = annotate (colorDull Green) (pretty prBranch)
       urlDoc = annotate (colorDull Blue) (pretty prUrl)
       detailsLine
         | null details = mempty
@@ -61,7 +62,8 @@ renderPR now PR{..} =
         <> pretty prTitle
         <> hardline
         <> "    "
-        <> urlDoc
+        <> branchDoc
+        <+> urlDoc
         <> detailsLine
 
 whenMaybe :: Bool -> a -> Maybe a

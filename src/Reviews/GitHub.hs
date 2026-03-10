@@ -48,6 +48,7 @@ data PR = PR
   , prAuthor :: Text
   , prRepo :: Text
   , prCreatedAt :: UTCTime
+  , prBranch :: Text
   , prCommentCount :: Int
   , prReviewRequests :: [Text]
   , prLatestReviews :: [Review]
@@ -63,6 +64,7 @@ instance FromJSON PR where
       <*> parseAuthorLogin v
       <*> (v .: "repository" >>= (.: "nameWithOwner"))
       <*> v .: "createdAt"
+      <*> (v .: "headRefName")
       <*> (v .: "comments" >>= (.: "totalCount"))
       <*> (map rrLogin <$> (v .: "reviewRequests" >>= (.: "nodes")))
       <*> (v .: "latestReviews" >>= (.: "nodes"))
@@ -86,6 +88,7 @@ graphqlQuery =
             author { login }
             repository { nameWithOwner }
             createdAt
+            headRefName
             comments { totalCount }
             reviewRequests(first: 10) {
               nodes {
