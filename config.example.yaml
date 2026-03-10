@@ -6,3 +6,6 @@ members:
 
 # Only show PRs that still need a review (default: false)
 # review_required: true
+
+# Include draft PRs (default: false)
+# include_drafts: true

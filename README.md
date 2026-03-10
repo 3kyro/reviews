@@ -23,11 +23,15 @@ members:
 
 # Only show PRs that still need a review (default: false)
 # review_required: true
+
+# Include draft PRs (default: false)
+# include_drafts: true
 ```
 
 - `org` — the GitHub organization to search
 - `members` — GitHub usernames whose open PRs to show
 - `review_required` — when `true`, only show PRs that still need a review (optional, defaults to `false`)
+- `include_drafts` — when `true`, include draft PRs in results (optional, defaults to `false`)
 
 Then just run:
 

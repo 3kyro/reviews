@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          reviews
-version:       0.2.0.0
+version:       0.3.0.0
 synopsis:      Check open PRs requiring review for your team
 description:   CLI tool that queries GitHub's GraphQL API to show open pull
                requests awaiting review from your team, grouped by author

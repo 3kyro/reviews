@@ -15,6 +15,7 @@ data Config = Config
   { org :: Text
   , members :: [Text]
   , reviewRequired :: Maybe Bool
+  , includeDrafts :: Maybe Bool
   }
   deriving (Show)
 
@@ -24,15 +25,17 @@ instance FromJSON Config where
       <$> v .: "org"
       <*> v .: "members"
       <*> v .:? "review_required"
+      <*> v .:? "include_drafts"
 
 data Opts = Opts
   { configPath :: Maybe FilePath
   , optsReviewRequired :: Bool
+  , optsIncludeDrafts :: Bool
   , optsUser :: Maybe Text
   }
 
 version :: String
-version = "0.2.0.0"
+version = "0.3.0.0"
 
 parseOpts :: IO Opts
 parseOpts =
@@ -69,6 +72,11 @@ optionsParser =
       ( long "required"
           <> short 'r'
           <> help "Only show PRs that still need a review"
+      )
+    <*> switch
+      ( long "drafts"
+          <> short 'd'
+          <> help "Include draft PRs"
       )
     <*> optional
       ( strOption
