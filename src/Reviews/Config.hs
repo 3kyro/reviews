@@ -25,8 +25,9 @@ instance FromJSON Config where
       <*> v .: "members"
       <*> v .:? "review_required"
 
-newtype Opts = Opts
+data Opts = Opts
   { configPath :: Maybe FilePath
+  , optsReviewRequired :: Bool
   }
 
 version :: String
@@ -62,4 +63,9 @@ optionsParser =
               <> metavar "FILE"
               <> help "Path to the configuration file (default: ~/.config/reviews/config.yaml)"
           )
+      )
+    <*> switch
+      ( long "required"
+          <> short 'r'
+          <> help "Only show PRs that still need a review"
       )

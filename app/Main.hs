@@ -8,5 +8,8 @@ main :: IO ()
 main = do
   opts <- parseOpts
   config <- loadConfig (configPath opts)
-  prs <- fetchPRs config
+  let config'
+        | optsReviewRequired opts = config {reviewRequired = Just True}
+        | otherwise = config
+  prs <- fetchPRs config'
   displayPRs prs
