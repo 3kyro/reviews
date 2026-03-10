@@ -109,10 +109,10 @@ graphqlQuery =
 
 fetchPRs :: Config -> IO [PR]
 fetchPRs Config{..} = do
-  let searchQuery =
-        T.unwords $
-          ["org:" <> org, "is:open", "is:pr", "review:required"]
-            ++ map ("author:" <>) members
+  let base = ["org:" <> org, "is:open", "is:pr"]
+            ++ ["review:required" | reviewRequired == Just True]
+      searchQuery =
+        T.unwords $ base ++ map ("author:" <>) members
       ghArgs =
         [ "api"
         , "graphql"

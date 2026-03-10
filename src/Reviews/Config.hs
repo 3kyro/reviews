@@ -5,19 +5,25 @@ module Reviews.Config
   , loadConfig
   ) where
 
+import Data.Aeson ((.:), (.:?), withObject)
 import Data.Text (Text)
-import Data.Yaml (FromJSON, decodeFileThrow)
-import GHC.Generics
+import Data.Yaml (FromJSON (..), decodeFileThrow)
 import Options.Applicative
 import System.Directory (getXdgDirectory, XdgDirectory(..))
 
 data Config = Config
   { org :: Text
   , members :: [Text]
+  , reviewRequired :: Maybe Bool
   }
-  deriving (Show, Generic)
+  deriving (Show)
 
-instance FromJSON Config
+instance FromJSON Config where
+  parseJSON = withObject "Config" $ \v ->
+    Config
+      <$> v .: "org"
+      <*> v .: "members"
+      <*> v .:? "review_required"
 
 newtype Opts = Opts
   { configPath :: Maybe FilePath

@@ -20,10 +20,14 @@ members:
   - alice
   - bob
   - charlie
+
+# Only show PRs that still need a review (default: false)
+# review_required: true
 ```
 
 - `org` — the GitHub organization to search
 - `members` — GitHub usernames whose open PRs to show
+- `review_required` — when `true`, only show PRs that still need a review (optional, defaults to `false`)
 
 Then just run:
 
