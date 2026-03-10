@@ -29,15 +29,22 @@ newtype Opts = Opts
   { configPath :: Maybe FilePath
   }
 
+version :: String
+version = "0.2.0.0"
+
 parseOpts :: IO Opts
 parseOpts =
   execParser $
     info
-      (optionsParser <**> helper)
+      (optionsParser <**> helper <**> versionOption)
       ( fullDesc
           <> progDesc "Show open PRs requiring review from your team"
           <> header "reviews - team PR review checker"
       )
+
+versionOption :: Parser (a -> a)
+versionOption =
+  infoOption version (long "version" <> short 'v' <> help "Show version")
 
 loadConfig :: Maybe FilePath -> IO Config
 loadConfig (Just p) = decodeFileThrow p
