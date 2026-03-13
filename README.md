@@ -25,10 +25,10 @@ members:
   - charlie
 
 # Only show PRs that still need a review (default: false)
-# review_required: true
+#review_required: true
 
 # Include draft PRs (default: false)
-# include_drafts: true
+#include_drafts: true
 
 # Sort PRs by time (default: false)
 #sort_by_time: true
