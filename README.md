@@ -15,7 +15,10 @@ cabal install exe:reviews
 Create `~/.config/reviews/config.yaml`:
 
 ```yaml
+# GitHub organization to search
 org: my-org
+
+# GitHub usernames whose open PRs to show
 members:
   - alice
   - bob
@@ -26,12 +29,10 @@ members:
 
 # Include draft PRs (default: false)
 # include_drafts: true
-```
 
-- `org` — the GitHub organization to search
-- `members` — GitHub usernames whose open PRs to show
-- `review_required` — when `true`, only show PRs that still need a review (optional, defaults to `false`)
-- `include_drafts` — when `true`, include draft PRs in results (optional, defaults to `false`)
+# Sort PRs by time (default: false)
+#sort_by_time: true
+```
 
 Then just run:
 
@@ -43,6 +44,15 @@ Use `-c` to point to a different config file:
 
 ```
 reviews -c /path/to/team.yaml
+```
+
+## Development
+
+For local development, you can run:
+
+```bash
+cp config.example.yaml config.yaml
+cabal run reviews -- -c config.yaml
 ```
 
 ## Example output

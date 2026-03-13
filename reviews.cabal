@@ -10,7 +10,7 @@ license:       BSD-3-Clause
 
 library
   exposed-modules:
-    Reviews.Config
+    Reviews.Settings
     Reviews.Display
     Reviews.GitHub
 
@@ -32,6 +32,7 @@ library
   default-extensions:
     OverloadedStrings
     RecordWildCards
+    OverloadedRecordDot
 
   default-language: GHC2021
   ghc-options:      -Wall
@@ -43,6 +44,11 @@ executable reviews
     base     >=4.14 && <5,
     reviews,
     text,
+
+  default-extensions:
+    OverloadedStrings
+    RecordWildCards
+    OverloadedRecordDot
 
   default-language: GHC2021
   ghc-options:      -Wall

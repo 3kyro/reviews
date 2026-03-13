@@ -15,7 +15,7 @@ import qualified Data.Text as T
 import Data.Text.Encoding (encodeUtf8)
 import Data.Time (UTCTime)
 import NeatInterpolation (trimming)
-import Reviews.Config (Config (..))
+import Reviews.Settings (Settings (..))
 import System.Exit
 import System.Process
 
@@ -110,11 +110,11 @@ graphqlQuery =
     }
   |]
 
-fetchPRs :: Config -> IO [PR]
-fetchPRs Config{..} = do
+fetchPRs :: Settings -> IO [PR]
+fetchPRs Settings{..} = do
   let base = ["org:" <> org, "is:open", "is:pr"]
-            ++ ["draft:false" | includeDrafts /= Just True]
-            ++ ["review:required" | reviewRequired == Just True]
+            ++ ["draft:false" | not includeDrafts]
+            ++ ["review:required" | reviewRequired]
       searchQuery =
         T.unwords $ base ++ map ("author:" <>) members
       ghArgs =
