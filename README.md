@@ -6,7 +6,7 @@ Requires the [GitHub CLI](https://cli.github.com/) (`gh`) to be installed and au
 
 ## Install
 
-```
+```bash
 cabal install exe:reviews
 ```
 
@@ -15,34 +15,44 @@ cabal install exe:reviews
 Create `~/.config/reviews/config.yaml`:
 
 ```yaml
+# GitHub organization to search
 org: my-org
+
+# GitHub usernames whose open PRs to show
 members:
   - alice
   - bob
   - charlie
 
 # Only show PRs that still need a review (default: false)
-# review_required: true
+#review_required: true
 
 # Include draft PRs (default: false)
-# include_drafts: true
-```
+#include_drafts: true
 
-- `org` — the GitHub organization to search
-- `members` — GitHub usernames whose open PRs to show
-- `review_required` — when `true`, only show PRs that still need a review (optional, defaults to `false`)
-- `include_drafts` — when `true`, include draft PRs in results (optional, defaults to `false`)
+# Sort PRs by time (default: false)
+#sort_by_time: true
+```
 
 Then just run:
 
-```
+```bash
 reviews
 ```
 
-Use `-c` to point to a different config file:
+## Development
 
+For local development, you can run:
+
+```bash
+cp config.example.yaml config.yaml
+cabal run reviews -- -c config.yaml
 ```
-reviews -c /path/to/team.yaml
+
+Formatting:
+
+```bash
+fourmolu -i .
 ```
 
 ## Example output
@@ -69,9 +79,3 @@ charlie:
     https://github.com/my-org/infra/pull/55
     Changes requested by: alice
 ```
-
-In your terminal, this is color-coded:
-- **Header** and **author names** are bold (authors in cyan)
-- **PR age** is green / yellow / red based on how long the PR has been open
-- **URLs** are dim blue
-- **Approved by** is green, **Changes requested by** is red

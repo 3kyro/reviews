@@ -1,21 +1,46 @@
-module Reviews.Config
-  ( Config (..)
-  , Opts (..)
-  , parseOpts
-  , loadConfig
-  ) where
+module Reviews.Settings (
+  Settings (..),
+  mkSettings,
+) where
 
-import Data.Aeson ((.:), (.:?), withObject)
+import Data.Aeson (withObject, (.:), (.:?))
+import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import Data.Yaml (FromJSON (..), decodeFileThrow)
 import Options.Applicative
-import System.Directory (getXdgDirectory, XdgDirectory(..))
+import System.Directory (XdgDirectory (..), getXdgDirectory)
 
-data Config = Config
+-- | App setup synthesized from Config, Opts, and defaults
+data Settings = Settings
   { org :: Text
   , members :: [Text]
-  , reviewRequired :: Maybe Bool
-  , includeDrafts :: Maybe Bool
+  , user :: Maybe Text
+  , reviewRequired :: Bool
+  , includeDrafts :: Bool
+  , sortByTime :: Bool
+  }
+  deriving (Show)
+
+mkSettings :: IO Settings
+mkSettings = do
+  Opts{..} <- parseOpts
+  Config{..} <- loadConfig optsConfigPath
+  pure
+    Settings
+      { org = cfgOrg
+      , members = cfgMembers
+      , user = optsUser
+      , reviewRequired = optsReviewRequired || fromMaybe False cfgReviewRequired
+      , includeDrafts = optsIncludeDrafts || fromMaybe False cfgIncludeDrafts
+      , sortByTime = optsSortByTime || fromMaybe False cfgSortByTime
+      }
+
+data Config = Config
+  { cfgOrg :: Text
+  , cfgMembers :: [Text]
+  , cfgReviewRequired :: Maybe Bool
+  , cfgIncludeDrafts :: Maybe Bool
+  , cfgSortByTime :: Maybe Bool
   }
   deriving (Show)
 
@@ -26,12 +51,14 @@ instance FromJSON Config where
       <*> v .: "members"
       <*> v .:? "review_required"
       <*> v .:? "include_drafts"
+      <*> v .:? "sort_by_time"
 
 data Opts = Opts
-  { configPath :: Maybe FilePath
+  { optsConfigPath :: Maybe FilePath
   , optsReviewRequired :: Bool
   , optsIncludeDrafts :: Bool
   , optsUser :: Maybe Text
+  , optsSortByTime :: Bool
   }
 
 version :: String
@@ -85,4 +112,9 @@ optionsParser =
               <> metavar "USER"
               <> help "Filter PRs by author (case-insensitive substring match)"
           )
+      )
+    <*> switch
+      ( long "time"
+          <> short 't'
+          <> help "Sort by time instead of by author"
       )

@@ -1,24 +1,19 @@
 module Main where
 
-import qualified Data.Text as T
-import Reviews.Config
+import Data.Text qualified as T
 import Reviews.Display
 import Reviews.GitHub
+import Reviews.Settings
 
 main :: IO ()
 main = do
-  opts <- parseOpts
-  config <- loadConfig (configPath opts)
-  let config' = config
-        { reviewRequired = if optsReviewRequired opts then Just True else reviewRequired config
-        , includeDrafts = if optsIncludeDrafts opts then Just True else includeDrafts config
-        }
-  prs <- fetchPRs config'
-  displayPRs $ filterByUser (optsUser opts) prs
+  settings <- mkSettings
+  prs <- fetchPRs settings
+  display settings $ filterByUser settings.user prs
 
 filterByUser :: Maybe T.Text -> [PR] -> [PR]
 filterByUser Nothing = id
 filterByUser (Just u) = filter (matches . prAuthor)
-  where
-    needle = T.toLower u
-    matches author = needle `T.isInfixOf` T.toLower author
+ where
+  needle = T.toLower u
+  matches author = needle `T.isInfixOf` T.toLower author
