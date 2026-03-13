@@ -1,9 +1,9 @@
 module Main where
 
-import qualified Data.Text as T
-import Reviews.Settings
+import Data.Text qualified as T
 import Reviews.Display
 import Reviews.GitHub
+import Reviews.Settings
 
 main :: IO ()
 main = do
@@ -14,6 +14,6 @@ main = do
 filterByUser :: Maybe T.Text -> [PR] -> [PR]
 filterByUser Nothing = id
 filterByUser (Just u) = filter (matches . prAuthor)
-  where
-    needle = T.toLower u
-    matches author = needle `T.isInfixOf` T.toLower author
+ where
+  needle = T.toLower u
+  matches author = needle `T.isInfixOf` T.toLower author

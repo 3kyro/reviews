@@ -1,6 +1,6 @@
-module Reviews.Display
-  ( display
-  ) where
+module Reviews.Display (
+  display,
+) where
 
 import Data.Function (on)
 import Data.List (groupBy)
@@ -17,32 +17,35 @@ display settings prs = do
   now <- getCurrentTime
   putDoc $
     renderTitle settings (length prs)
-    <> renderPRs settings now prs
+      <> renderPRs settings now prs
 
 renderTitle :: Settings -> Int -> Doc AnsiStyle
-renderTitle settings count = annotate bold $ 
-  countText <+> statusText <+> prsText <> reviewText <> periodText <> hardline <> hardline
-  where 
-    countText = if count > 0 then pretty count else "No"
-    statusText = if settings.includeDrafts then "draft or open" else "open"
-    prsText = if count == 1 then "PR" else "PRs"
-    reviewText = if settings.reviewRequired then " requiring review" else ""
-    periodText = if count == 0 then "." else ":"
+renderTitle settings count =
+  annotate bold $
+    countText <+> statusText <+> prsText <> reviewText <> periodText <> hardline <> hardline
+ where
+  countText = if count > 0 then pretty count else "No"
+  statusText = if settings.includeDrafts then "draft or open" else "open"
+  prsText = if count == 1 then "PR" else "PRs"
+  reviewText = if settings.reviewRequired then " requiring review" else ""
+  periodText = if count == 0 then "." else ":"
 
 renderPRs :: Settings -> UTCTime -> [PR] -> Doc AnsiStyle
 renderPRs settings now prs =
   if settings.sortByTime
-    then foldMap (renderGroup now)
-      $   groupBy ((==) `on` prAuthor) prs
+    then
+      foldMap (renderGroup now) $
+        groupBy ((==) `on` prAuthor) prs
     else
-      foldMap 
-        (\member -> renderGroup now (filter ((== member) . prAuthor) prs)) 
+      foldMap
+        (\member -> renderGroup now (filter ((== member) . prAuthor) prs))
         settings.members
 
 renderGroup :: UTCTime -> [PR] -> Doc AnsiStyle
 renderGroup _ [] = mempty
 renderGroup now grp@(first : _) =
-  annotate (bold <> color Cyan) (pretty first.prAuthor) <> ":"
+  annotate (bold <> color Cyan) (pretty first.prAuthor)
+    <> ":"
     <> hardline
     <> foldMap (\pr -> renderPR now pr <> hardline) grp
 
@@ -71,7 +74,11 @@ renderPR now PR{..} =
       detailsLine
         | null details = mempty
         | otherwise = hardline <> "    " <> hsep (punctuate " |" details)
-   in "  " <> pretty prRepo <+> "#" <> pretty prNumber <+> parens (annotate ageColor ageText)
+   in "  "
+        <> pretty prRepo
+        <+> "#"
+        <> pretty prNumber
+        <+> parens (annotate ageColor ageText)
         <> hardline
         <> "    "
         <> pretty prTitle

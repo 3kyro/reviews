@@ -6,7 +6,7 @@ Requires the [GitHub CLI](https://cli.github.com/) (`gh`) to be installed and au
 
 ## Install
 
-```
+```bash
 cabal install exe:reviews
 ```
 
@@ -36,14 +36,8 @@ members:
 
 Then just run:
 
-```
+```bash
 reviews
-```
-
-Use `-c` to point to a different config file:
-
-```
-reviews -c /path/to/team.yaml
 ```
 
 ## Development
@@ -53,6 +47,12 @@ For local development, you can run:
 ```bash
 cp config.example.yaml config.yaml
 cabal run reviews -- -c config.yaml
+```
+
+Formatting:
+
+```bash
+fourmolu -i .
 ```
 
 ## Example output
@@ -79,9 +79,3 @@ charlie:
     https://github.com/my-org/infra/pull/55
     Changes requested by: alice
 ```
-
-In your terminal, this is color-coded:
-- **Header** and **author names** are bold (authors in cyan)
-- **PR age** is green / yellow / red based on how long the PR has been open
-- **URLs** are dim blue
-- **Approved by** is green, **Changes requested by** is red

@@ -1,17 +1,17 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module Reviews.GitHub
-  ( PR (..)
-  , Review (..)
-  , fetchPRs
-  ) where
+module Reviews.GitHub (
+  PR (..),
+  Review (..),
+  fetchPRs,
+) where
 
 import Control.Applicative ((<|>))
 import Data.Aeson
 import Data.Aeson.Types (Parser)
-import qualified Data.ByteString.Lazy as LBS
+import Data.ByteString.Lazy qualified as LBS
 import Data.Text (Text)
-import qualified Data.Text as T
+import Data.Text qualified as T
 import Data.Text.Encoding (encodeUtf8)
 import Data.Time (UTCTime)
 import NeatInterpolation (trimming)
@@ -112,9 +112,10 @@ graphqlQuery =
 
 fetchPRs :: Settings -> IO [PR]
 fetchPRs Settings{..} = do
-  let base = ["org:" <> org, "is:open", "is:pr"]
-            ++ ["draft:false" | not includeDrafts]
-            ++ ["review:required" | reviewRequired]
+  let base =
+        ["org:" <> org, "is:open", "is:pr"]
+          ++ ["draft:false" | not includeDrafts]
+          ++ ["review:required" | reviewRequired]
       searchQuery =
         T.unwords $ base ++ map ("author:" <>) members
       ghArgs =

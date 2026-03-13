@@ -1,14 +1,14 @@
-module Reviews.Settings
-  ( Settings (..)
-  , mkSettings
-  ) where
+module Reviews.Settings (
+  Settings (..),
+  mkSettings,
+) where
 
-import Data.Aeson ((.:), (.:?), withObject)
+import Data.Aeson (withObject, (.:), (.:?))
+import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import Data.Yaml (FromJSON (..), decodeFileThrow)
 import Options.Applicative
-import System.Directory (getXdgDirectory, XdgDirectory(..))
-import Data.Maybe (fromMaybe)
+import System.Directory (XdgDirectory (..), getXdgDirectory)
 
 -- | App setup synthesized from Config, Opts, and defaults
 data Settings = Settings
@@ -23,16 +23,17 @@ data Settings = Settings
 
 mkSettings :: IO Settings
 mkSettings = do
-  Opts {..} <- parseOpts
-  Config {..} <- loadConfig optsConfigPath
-  pure Settings
-    { org = cfgOrg
-    , members = cfgMembers
-    , user = optsUser
-    , reviewRequired = optsReviewRequired || fromMaybe False cfgReviewRequired
-    , includeDrafts = optsIncludeDrafts || fromMaybe False cfgIncludeDrafts
-    , sortByTime = optsSortByTime || fromMaybe False cfgSortByTime
-    }
+  Opts{..} <- parseOpts
+  Config{..} <- loadConfig optsConfigPath
+  pure
+    Settings
+      { org = cfgOrg
+      , members = cfgMembers
+      , user = optsUser
+      , reviewRequired = optsReviewRequired || fromMaybe False cfgReviewRequired
+      , includeDrafts = optsIncludeDrafts || fromMaybe False cfgIncludeDrafts
+      , sortByTime = optsSortByTime || fromMaybe False cfgSortByTime
+      }
 
 data Config = Config
   { cfgOrg :: Text
