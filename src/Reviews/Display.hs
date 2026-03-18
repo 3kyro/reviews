@@ -17,12 +17,13 @@ display settings prs = do
   now <- getCurrentTime
   putDoc $
     renderTitle settings (length prs)
+      <> hardline
       <> renderPRs settings now prs
 
 renderTitle :: Settings -> Int -> Doc AnsiStyle
 renderTitle settings count =
   annotate bold $
-    countText <+> statusText <+> prsText <> reviewText <> periodText <> hardline <> hardline
+    countText <+> statusText <+> prsText <> reviewText <> periodText <> hardline
  where
   countText = if count > 0 then pretty count else "No"
   statusText = if settings.includeDrafts then "draft or open" else "open"
@@ -87,6 +88,7 @@ renderPR now PR{..} =
         <> branchDoc
         <+> urlDoc
         <> detailsLine
+        <> hardline
 
 whenMaybe :: Bool -> a -> Maybe a
 whenMaybe True x = Just x
