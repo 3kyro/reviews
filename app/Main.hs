@@ -9,11 +9,13 @@ main :: IO ()
 main = do
   settings <- mkSettings
   prs <- fetchPRs settings
-  display settings $ filterByUser settings.user prs
+  display settings
+    . filterBy prAuthor settings.user
+    . filterBy prTitle settings.search
+    $ prs
 
-filterByUser :: Maybe T.Text -> [PR] -> [PR]
-filterByUser Nothing = id
-filterByUser (Just u) = filter (matches . prAuthor)
+filterBy :: (PR -> T.Text) -> Maybe T.Text -> [PR] -> [PR]
+filterBy _ Nothing = id
+filterBy field (Just needle) = filter (matches . field)
  where
-  needle = T.toLower u
-  matches author = needle `T.isInfixOf` T.toLower author
+  matches t = T.toLower needle `T.isInfixOf` T.toLower t

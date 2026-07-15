@@ -30,6 +30,9 @@ members:
 # Include draft PRs (default: false)
 #include_drafts: true
 
+# Only show draft PRs (default: false)
+#drafts_only: true
+
 # Sort PRs by time (default: false)
 #sort_by_time: true
 ```

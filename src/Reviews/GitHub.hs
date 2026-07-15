@@ -112,9 +112,13 @@ graphqlQuery =
 
 fetchPRs :: Settings -> IO [PR]
 fetchPRs Settings{..} = do
-  let base =
+  let draftFilter
+        | draftsOnly = ["draft:true"]
+        | includeDrafts = []
+        | otherwise = ["draft:false"]
+      base =
         ["org:" <> org, "is:open", "is:pr"]
-          ++ ["draft:false" | not includeDrafts]
+          ++ draftFilter
           ++ ["review:required" | reviewRequired]
       searchQuery =
         T.unwords $ base ++ map ("author:" <>) members

@@ -26,7 +26,10 @@ renderTitle settings count =
     countText <+> statusText <+> prsText <> reviewText <> periodText <> hardline
  where
   countText = if count > 0 then pretty count else "No"
-  statusText = if settings.includeDrafts then "draft or open" else "open"
+  statusText
+    | settings.draftsOnly = "draft"
+    | settings.includeDrafts = "draft or open"
+    | otherwise = "open"
   prsText = if count == 1 then "PR" else "PRs"
   reviewText = if settings.reviewRequired then " requiring review" else ""
   periodText = if count == 0 then "." else ":"
